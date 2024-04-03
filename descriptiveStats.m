@@ -72,7 +72,7 @@ folderPath = '/Users/ece.ziya/Desktop/Dissimilarity/Matlab';
 cd(folderPath)
 demographics = readtable("participantDemographics_DM.xlsx");
 
-meanAge = mean(demographics.Age);
+meanAge = median(demographics.Age);
 medianAge = median(demographics.Age);
 sdAge = std(demographics.Age);
 youngestAge = min(demographics.Age);
