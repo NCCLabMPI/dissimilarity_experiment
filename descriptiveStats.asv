@@ -82,89 +82,103 @@ for i = 1:numel(subjectFolders)
             subjectID = currentSession.Subject_Code;
     
                     if isempty(subjectID)
-                        subjectID = 'sub-101';
-                     end
+                subjectID = 'sub-101';
+    end
     
-            totalRowNum = height(RatingTable);
-            subjectIDRepeat = repmat({subjectID}, totalRowNum, 1);
+    totalRowNum = height(RatingTable);
+    subjectIDRepeat = repmat({subjectID}, totalRowNum, 1);
     
-            RatingTable = addvars(RatingTable, subjectIDRepeat, 'Before', 1, 'NewVariableNames', 'Subject Number');
+    RatingTable = addvars(RatingTable, subjectIDRepeat, 'Before', 1, 'NewVariableNames', 'Subject Number');
    
-             trialDataFaces{i} = RatingTable;
+    trialDataFaces{i} = RatingTable;
+ 
 
-            end
+    
+end
 
-  elseif sessionData.Session_Name == "sessionObject"
+
+
+
+    elseif sessionData.Session_Name == "sessionObject"
         objectFiles{i} = currentSubject;
         objectFiles = objectFiles(~cellfun(@isempty, objectFiles));
-
-            for i = 1:numel(objectFiles)
-    
-            objectPath = objectFiles{i};  
-    
-            % access trial data 
-
-            trialPath = fullfile(objectPath,"trials.csv");
-            currentTrial = readtable(trialPath);
-
-             %clean the trial data
-
-             Object1Block1 = rmmissing(currentTrial.RowNumStim1(:)); %clean the NaN values
-            Object2Block1 = rmmissing(currentTrial.RowNumStim2(:));
-            ObjectBlock1Ratings = rmmissing(currentTrial.ObjectSimilarityBlock1(:));
-
-            ObjectMatrix1 = [Object1Block1,Object2Block1,ObjectBlock1Ratings]; % first block
-
-            ObjectTable1 = array2table(ObjectMatrix1, 'VariableNames', {'Object1Block1', 'Object2Block1', 'RatingsBlock1'});
-
-            Object1Block2 = rmmissing(currentTrial.RowObject1SecondBlock(:));
-            Object2Block2 = rmmissing(currentTrial.RowObject2SecondBlock(:));
-            ObjectBlock2Ratings = rmmissing(currentTrial.ObjectSimilarityBlock2(:));
-   
-            ObjectMatrix2 = [Object1Block2,Object2Block2,ObjectBlock2Ratings]; % second block
-            ObjectTable2 = array2table(ObjectMatrix2,'VariableNames',{'Object1Block2','Object2Block2','RatingsBlock2'});
-
-            cleanTrialDataObjects = horzcat(ObjectTable1,ObjectTable2);
-            block1Pairs = cleanTrialDataObjects {:,1:2};
-            block2Pairs = cleanTrialDataObjects{:,4:5};
-            ratings1 = cleanTrialDataObjects{:,3};
-             ratings2 = cleanTrialDataObjects{:,6};
-
-          [~, idx] = ismember(block1Pairs, block2Pairs, 'rows'); %finding matching pairs
-   
-          matchingRatings = [block1Pairs,ratings1,ratings2(idx)];
-          RatingTable = array2table(matchingRatings,'VariableNames',{'Stimulus1','Stimulus2','RatingBlock1','RatingBlock2'});
-    
-          %here I also want to add subject ID. Since first subject does not have
-          %ID I'll give the name sub1 if empty
-          %ID's are in the session file. 
-    
-         sessionPath = fullfile(objectPath,"sessions.csv");
-         currentSession = readtable(sessionPath);
-         subjectID = currentSession.Subject_Code;
-    
-                 if isempty(subjectID)
-                 subjectID = 'sub-101';
-                 end
-        
-        totalRowNum = height(RatingTable);
-        subjectIDRepeat = repmat({subjectID}, totalRowNum, 1);
-    
-         RatingTable = addvars(RatingTable, subjectIDRepeat, 'Before', 1, 'NewVariableNames', 'Subject Number');
-   
-        trialDataObjects{i} = RatingTable;
-
-        end   
-
-
     end
     
 end
 
 
+
+%% 
+% create files based on the participant group 
+
+
+
+
+
+    elseif sessionData.Session_Name == "sessionObject"
+    
+   for i = 1:numel(objectFiles)
+    
+    objectPath = objectFiles{i};  
+    
+    % access trial data 
+
+    trialPath = fullfile(objectPath,"trials.csv");
+    currentTrial = readtable(trialPath);
+
+    %clean the trial data
+
+    Object1Block1 = rmmissing(currentTrial.RowNumStim1(:)); %clean the NaN values
+    Object2Block1 = rmmissing(currentTrial.RowNumStim2(:));
+    ObjectBlock1Ratings = rmmissing(currentTrial.ObjectSimilarityBlock1(:));
+
+    ObjectMatrix1 = [Object1Block1,Object2Block1,ObjectBlock1Ratings]; % first block
+
+    ObjectTable1 = array2table(ObjectMatrix1, 'VariableNames', {'Object1Block1', 'Object2Block1', 'RatingsBlock1'});
+
+    Object1Block2 = rmmissing(currentTrial.RowObject1SecondBlock(:));
+    Object2Block2 = rmmissing(currentTrial.RowObject2SecondBlock(:));
+    ObjectBlock2Ratings = rmmissing(currentTrial.ObjectSimilarityBlock2(:));
+   
+    ObjectMatrix2 = [Object1Block2,Object2Block2,ObjectBlock2Ratings]; % second block
+    ObjectTable2 = array2table(ObjectMatrix2,'VariableNames',{'Object1Block2','Object2Block2','RatingsBlock2'});
+
+    cleanTrialDataObjects = horzcat(ObjectTable1,ObjectTable2);
+    block1Pairs = cleanTrialDataObjects {:,1:2};
+    block2Pairs = cleanTrialDataObjects{:,4:5};
+    ratings1 = cleanTrialDataObjects{:,3};
+    ratings2 = cleanTrialDataObjects{:,6};
+
+    [~, idx] = ismember(block1Pairs, block2Pairs, 'rows'); %finding matching pairs
+   
+    matchingRatings = [block1Pairs,ratings1,ratings2(idx)];
+    RatingTable = array2table(matchingRatings,'VariableNames',{'Stimulus1','Stimulus2','RatingBlock1','RatingBlock2'});
+    
+    %here I also want to add subject ID. Since first subject does not have
+    %ID I'll give the name sub1 if empty
+    %ID's are in the session file. 
+    
+    sessionPath = fullfile(objectPath,"sessions.csv");
+    currentSession = readtable(sessionPath);
+    subjectID = currentSession.Subject_Code;
+    
+    if isempty(subjectID)
+        subjectID = 'sub-101';
+    end
+    
+    totalRowNum = height(RatingTable);
+    subjectIDRepeat = repmat({subjectID}, totalRowNum, 1);
+    
+    RatingTable = addvars(RatingTable, subjectIDRepeat, 'Before', 1, 'NewVariableNames', 'Subject Number');
+   
+    trialDataObjects{i} = RatingTable;
+
+   end
+    end
+        
     combinedFaceCells = vertcat(trialDataFaces{:});
     combinedObjectCells = vertcat(trialDataObjects{:});
-  
+   
     %save the file
     faceRatingFile = 'FaceData.mat';
     dataFile = '/Users/ece.ziya/Desktop/Dissimilarity/Matlab/DataFiles';
