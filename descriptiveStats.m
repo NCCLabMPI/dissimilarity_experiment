@@ -1,172 +1,187 @@
-%% Clear and go to the folder
+%% Clear and go to the folder for the data 
 clear
 clc
-folderPath = '/Users/ece.ziya/Desktop/Dissimilarity/Matlab/FirstPilotData';
+folderPath = '/Volumes/Projects/2023-0383-PerceiveIrrelevance/03data/DissimilarityMatrices';
 cd(folderPath)
+addpath(genpath(folderPath)); %I open the path where my data is
 
-%% Face File & trial files 
-% open the subject file and get all the files in it
-faceFolderPath = '/Users/ece.ziya/Desktop/Dissimilarity/Matlab/FirstPilotData/SubjectPilot';
-faceFolders = dir(faceFolderPath); % to open all the folders inside
-faceFolders = faceFolders([faceFolders.isdir] & ~startsWith({faceFolders.name}, '.')); %removing hidden files
-% create a cell array to store the content (aka folders in my subjectPilot)
+% Decide whether the file is object or face data
+subjectFolders = dir(folderPath);
+subjectFolders = subjectFolders([subjectFolders.isdir] & ~startsWith({subjectFolders.name}, '.') ...
+                                                        & ~strcmp({subjectFolders.name},'Age&Gender')); % remove both hidden and demographics file
+%sessionID = {}; % this one is for deciding which code I'll use - face or object
+objectFiles = {}; %I will add the object files in this cell with participant numbers
+faceFiles = {}; % I will add the face files here
 
+for i = 1:numel(subjectFolders)
+    % first I open the session file that contains the info I am looking for
+    
+    currentSubject = fullfile(folderPath,subjectFolders(i).name);
+    subjectFileContent = dir(currentSubject);
+    subjectSessionFile = fullfile(currentSubject,'sessions.csv');
+    sessionData = readtable(subjectSessionFile);
+    
+    if sessionData.Session_Name(1) == "sessionFace"
+        faceFiles{i} = currentSubject;
+    elseif sessionData.Session_Name == "sessionObject"
+        objectFiles{i} = currentSubject;
+    end
 
-folderNames = {};%I added this to check whether I go through all the variables. 
-trialDataFaces = {};
-
-%this is a struct. I want to convert it to a cell. 
-for i = 1:numel(faceFolders) % loop for the size of the faceFolder
-currentFaceFolder = fullfile(faceFolderPath,faceFolders(i).name); %session ID
-
-
-%folderNames{i} = folderName; %here I put it to check whether I see all the folders. 
-
-faceFolderContent = dir(currentFaceFolder); %I opened the sessionfolder
-
-trialsCSVFile = fullfile(currentFaceFolder, 'trials.csv'); %I read the csv file
-
-trialData = readtable(trialsCSVFile);
-
-trialDataFaces{i} = trialData; %this one is not clean
-
+    %check the sessionName 
+    %if sessionData.
+    
 end
 
-% clean NaN variables in the trial data
-% loop through each trial data 
+faceFiles = faceFiles(~cellfun(@isempty, faceFiles)); % get rid of empty files
+objectFiles = objectFiles(~cellfun(@isempty, objectFiles));
 
-    trialRatingMatrixFace = {}; %this one is clean, without NaN 
+% create files based on the participant group 
 
-for i = 1:numel(trialDataFaces)
+trialDataFaces = {}; %for faces
+trialDataObjects = {};%for objects
+cleanTrialDataFaces = {}; %put clean face trial data
+cleanTrialDataObject = {}; %put clean object trial data
 
-    currentTrialFace = trialDataFaces{i};
+    if sessionData.Session_Name(1) == "sessionFace" % if it is face
 
+
+for i = 1:numel(faceFiles)
+    %first I open the files here and clean the hidden files
     
-    Face1Block1 = rmmissing(currentTrialFace.RowFace1(:)); %clean the NaN values
-    Face2Block1 = rmmissing(currentTrialFace.RowFace2(:));
-    FaceBlock1Ratings = rmmissing(currentTrialFace.faceSimilarityBlock1(:));
+    facePath = faceFiles{i};  % each facePath consist of two files: 
+                              % trial and session 
+     
+    % access trial data 
+
+    trialPath = fullfile(facePath,"trials.csv");
+    currentTrial = readtable(trialPath);
+
+    %clean the trial data
+
+    Face1Block1 = rmmissing(currentTrial.RowFace1(:)); %clean the NaN values
+    Face2Block1 = rmmissing(currentTrial.RowFace2(:));
+    FaceBlock1Ratings = rmmissing(currentTrial.faceSimilarityBlock1(:));
 
     FaceMatrix1 = [Face1Block1,Face2Block1,FaceBlock1Ratings]; % first block
 
     FaceTable1 = array2table(FaceMatrix1, 'VariableNames', {'Face1Block1', 'Face2Block1', 'RatingsBlock1'});
 
-    Face1Block2 = rmmissing(currentTrialFace.RowFace1SecondBlock(:));
-    Face2Block2 = rmmissing(currentTrialFace.RowFace2SecondBlock(:));
-    FaceBlock2Ratings = rmmissing(currentTrialFace.faceSimilarityBlock2);
+    Face1Block2 = rmmissing(currentTrial.RowFace1SecondBlock(:));
+    Face2Block2 = rmmissing(currentTrial.RowFace2SecondBlock(:));
+    FaceBlock2Ratings = rmmissing(currentTrial.faceSimilarityBlock2);
    
     FaceMatrix2 = [Face1Block2,Face2Block2,FaceBlock2Ratings]; % second block
     FaceTable2 = array2table(FaceMatrix2,'VariableNames',{'Face1Block2','Face2Block2','RatingsBlock2'});
 
-    trialRatingMatrixFace{i} = horzcat(FaceTable1,FaceTable2);
-
-end
-
-% Matching the same pairs in 2 blocks 
-
-RatingsCellFace = {};
-
-for i= 1:numel(trialRatingMatrixFace)
-
-    currentTable = trialRatingMatrixFace{i}; %open the first cell
+    cleanTrialDataFaces = horzcat(FaceTable1,FaceTable2);
     
-    block1Pairs = currentTable {:,1:2};
-    block2Pairs = currentTable{:,4:5};
-    ratings1 = currentTable{:,3};
-    ratings2 = currentTable{:,6};
+    % match the pairs 
+    
+    block1Pairs = cleanTrialDataFaces {:,1:2};
+    block2Pairs = cleanTrialDataFaces{:,4:5};
+    ratings1 = cleanTrialDataFaces{:,3};
+    ratings2 = cleanTrialDataFaces{:,6};
 
     [~, idx] = ismember(block1Pairs, block2Pairs, 'rows'); %finding matching pairs
-
+   
+   
     matchingRatings = [block1Pairs,ratings1,ratings2(idx)];
-    RatingTable = array2table(matchingRatings,'VariableNames',{'Face1','Face2','RatingBlock1','RatingBlock2'});
+    RatingTable = array2table(matchingRatings,'VariableNames',{'Stimulus1','Stimulus2','RatingBlock1','RatingBlock2'});
     
-    RatingsCellFace{i} = RatingTable;
+    %here I also want to add subject ID. Since first subject does not have
+    %ID I'll give the name sub1 if empty
+    %ID's are in the session file. 
+    
+    sessionPath = fullfile(facePath,"sessions.csv");
+    currentSession = readtable(sessionPath);
+    subjectID = currentSession.Subject_Code;
+    
+    if isempty(subjectID)
+        subjectID = 'sub-101';
+    end
+    
+    totalRowNum = height(RatingTable);
+    subjectIDRepeat = repmat({subjectID}, totalRowNum, 1);
+    
+    RatingTable = addvars(RatingTable, subjectIDRepeat, 'Before', 1, 'NewVariableNames', 'Subject Number');
+   
+    trialDataFaces{i} = RatingTable;
+ 
 
+    
 end
-
-%Save files as matlab
-faceRatingFile = 'ratingFace.mat';
-dataFile = '/Users/ece.ziya/Desktop/Dissimilarity/Matlab/DataFiles';
-save(fullfile(dataFile,faceRatingFile),'RatingsCellFace');
-
+    elseif sessionData.Session_Name == "sessionObject"
     
-%% Object Files & trial Files
-
-objectFolderPath = '/Users/ece.ziya/Desktop/Dissimilarity/Matlab/FirstPilotData/ObjectPilot';
-objectFolders = dir(objectFolderPath);
-objectFolders = objectFolders([objectFolders.isdir] & ~startsWith({objectFolders.name}, '.'));
-
-trialDataObjects = {};
-
-%this is a struct. I want to convert it to a cell. 
-for i = 1:numel(objectFolders) % loop for the size of the faceFolder
-    currentObjectFolder = fullfile(objectFolderPath,objectFolders(i).name); %session ID
-
-    objectFolderContent = dir(currentObjectFolder); %I opened the sessionfolder
-
-    trialsCSVFile = fullfile(currentObjectFolder, 'trials.csv'); %I read the csv file
-
-    trialData = readtable(trialsCSVFile);
-
-    trialDataObjects{i} = trialData; %this one is not clean
-
-end
-
-%Clean NaN variables for objects 
- trialRatingMatrixObject= {}; %this one is clean, without NaN 
-
-for i = 1:numel(trialDataObjects)
-
-    currentTrialObject = trialDataObjects{i};
-
+   for i = 1:numel(objectFiles)
     
-    Object1Block1 = rmmissing(currentTrialObject.RowNumStim1(:)); %clean the NaN values
-    Object2Block1 = rmmissing(currentTrialObject.RowNumStim2(:));
-    % RowNumStim1 = Object ID 1 & RowNumStim2 = Object ID 2
-    ObjectBlock1Ratings = rmmissing(currentTrialObject.ObjectSimilarityBlock1(:));
+    objectPath = objectFiles{i};  
+    
+    % access trial data 
+
+    trialPath = fullfile(objectPath,"trials.csv");
+    currentTrial = readtable(trialPath);
+
+    %clean the trial data
+
+    Object1Block1 = rmmissing(currentTrial.RowNumStim1(:)); %clean the NaN values
+    Object2Block1 = rmmissing(currentTrial.RowNumStim2(:));
+    ObjectBlock1Ratings = rmmissing(currentTrial.ObjectSimilarityBlock1(:));
 
     ObjectMatrix1 = [Object1Block1,Object2Block1,ObjectBlock1Ratings]; % first block
 
     ObjectTable1 = array2table(ObjectMatrix1, 'VariableNames', {'Object1Block1', 'Object2Block1', 'RatingsBlock1'});
 
-    Object1Block2 = rmmissing(currentTrialObject.RowObject1SecondBlock(:));
-    Object2Block2 = rmmissing(currentTrialObject.RowObject2SecondBlock(:));
-    ObjectBlock2Ratings = rmmissing(currentTrialObject.ObjectSimilarityBlock2);
+    Object1Block2 = rmmissing(currentTrial.RowObject1SecondBlock(:));
+    Object2Block2 = rmmissing(currentTrial.RowObject2SecondBlock(:));
+    ObjectBlock2Ratings = rmmissing(currentTrial.ObjectSimilarityBlock2(:));
    
     ObjectMatrix2 = [Object1Block2,Object2Block2,ObjectBlock2Ratings]; % second block
     ObjectTable2 = array2table(ObjectMatrix2,'VariableNames',{'Object1Block2','Object2Block2','RatingsBlock2'});
 
-    trialRatingMatrixObject{i} = horzcat(ObjectTable1,ObjectTable2);
-
-end
-
-% Matching the pairs in 2 blocks 
-RatingsCellObject = {};
-
-for i= 1:numel(trialRatingMatrixObject)
-
-    currentTable = trialRatingMatrixObject{i}; %open the first cell
-    
-    block1Pairs = currentTable {:,1:2};
-    block2Pairs = currentTable{:,4:5};
-    ratings1 = currentTable{:,3};
-    ratings2 = currentTable{:,6};
+    cleanTrialDataObjects = horzcat(ObjectTable1,ObjectTable2);
+    block1Pairs = cleanTrialDataObjects {:,1:2};
+    block2Pairs = cleanTrialDataObjects{:,4:5};
+    ratings1 = cleanTrialDataObjects{:,3};
+    ratings2 = cleanTrialDataObjects{:,6};
 
     [~, idx] = ismember(block1Pairs, block2Pairs, 'rows'); %finding matching pairs
-
+   
     matchingRatings = [block1Pairs,ratings1,ratings2(idx)];
-    RatingTable = array2table(matchingRatings,'VariableNames',{'Object1','Object2','RatingBlock1','RatingBlock2'});
+    RatingTable = array2table(matchingRatings,'VariableNames',{'Stimulus1','Stimulus2','RatingBlock1','RatingBlock2'});
     
-    RatingsCellObject{i} = RatingTable;
+    %here I also want to add subject ID. Since first subject does not have
+    %ID I'll give the name sub1 if empty
+    %ID's are in the session file. 
+    
+    sessionPath = fullfile(objectPath,"sessions.csv");
+    currentSession = readtable(sessionPath);
+    subjectID = currentSession.Subject_Code;
+    
+    if isempty(subjectID)
+        subjectID = 'sub-101';
+    end
+    
+    totalRowNum = height(RatingTable);
+    subjectIDRepeat = repmat({subjectID}, totalRowNum, 1);
+    
+    RatingTable = addvars(RatingTable, subjectIDRepeat, 'Before', 1, 'NewVariableNames', 'Subject Number');
+   
+    trialDataObjects{i} = RatingTable;
 
-end
-
-%Save the files as matlab
-objectRatingFile = 'ratingObject.mat';
-dataFile = '/Users/ece.ziya/Desktop/Dissimilarity/Matlab/DataFiles';
-save(fullfile(dataFile,objectRatingFile),'RatingsCellObject');
-
-
-
+   end
+    end
+        
+    combinedFaceCells = vertcat(trialDataFaces{:});
+    combinedObjectCells = vertcat(trialDataObjects{:});
+   
+    %save the file
+    faceRatingFile = 'FaceData.mat';
+    dataFile = '/Users/ece.ziya/Desktop/Dissimilarity/Matlab/DataFiles';
+    save(fullfile(dataFile,faceRatingFile),'combinedFaceCells');
+    objectRatingFile = 'ObjectData.mat';
+    dataFile = '/Users/ece.ziya/Desktop/Dissimilarity/Matlab/DataFiles';
+    save(fullfile(dataFile,objectRatingFile),'combinedObjectCells');
+    
 %% Descriptive for gender and age 
 clear
 clc
