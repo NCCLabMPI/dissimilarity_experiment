@@ -81,14 +81,12 @@ for i = 1:numel(subjectFolders)
             currentSession = readtable(sessionPath);
             subjectID = currentSession.Subject_Code;
     
-                    if isempty(subjectID)
-                        subjectID = 'sub-101';
-                     end
+                    
     
             totalRowNum = height(RatingTable);
             subjectIDRepeat = repmat({subjectID}, totalRowNum, 1);
     
-            RatingTable = addvars(RatingTable, subjectIDRepeat, 'Before', 1, 'NewVariableNames', 'Subject Number');
+            RatingTable = addvars(RatingTable, subjectIDRepeat, 'Before', 1, 'NewVariableNames', 'subjectNumber');
    
              trialDataFaces{i} = RatingTable;
 
@@ -135,22 +133,19 @@ for i = 1:numel(subjectFolders)
           matchingRatings = [block1Pairs,ratings1,ratings2(idx)];
           RatingTable = array2table(matchingRatings,'VariableNames',{'Stimulus1','Stimulus2','RatingBlock1','RatingBlock2'});
     
-          %here I also want to add subject ID. Since first subject does not have
-          %ID I'll give the name sub1 if empty
-          %ID's are in the session file. 
+          %here I also want to add subject ID. 
+         
     
          sessionPath = fullfile(objectPath,"sessions.csv");
          currentSession = readtable(sessionPath);
          subjectID = currentSession.Subject_Code;
-    
-                 if isempty(subjectID)
-                 subjectID = 'sub-101';
-                 end
+               
+              
         
         totalRowNum = height(RatingTable);
         subjectIDRepeat = repmat({subjectID}, totalRowNum, 1);
     
-         RatingTable = addvars(RatingTable, subjectIDRepeat, 'Before', 1, 'NewVariableNames', 'Subject Number');
+         RatingTable = addvars(RatingTable, subjectIDRepeat, 'Before', 1, 'NewVariableNames', 'subjectNumber');
    
         trialDataObjects{i} = RatingTable;
 
@@ -164,7 +159,15 @@ end
 
     combinedFaceCells = vertcat(trialDataFaces{:});
     combinedObjectCells = vertcat(trialDataObjects{:});
-  
+
+    % I know that first participant's id is missing. This line will check
+    % NaN in the final version of tables and assign a the value sub-101 
+
+   subjectNumberCell = (combinedObjectCells.subjectNumber);
+   nanIndices = cellfun(@(x) isnumeric(x) && any(isnan(x)), subjectNumberCell);
+   subjectNumberCell(nanIndices) = {'Sub-101'};
+   combinedObjectCells.subjectNumber = subjectNumberCell;
+
     %save the file
     faceRatingFile = 'FaceData.mat';
     dataFile = '/Users/ece.ziya/Desktop/Dissimilarity/Matlab/DataFiles';
