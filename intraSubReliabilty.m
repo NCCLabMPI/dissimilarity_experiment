@@ -7,9 +7,9 @@ clc
 
 filePath = '/Users/ece.ziya/Desktop/Dissimilarity/Matlab/DataFiles';
 cd(filePath);
-%load('FaceData.mat');
-load("ObjectData.mat")
-correlationData = combinedObjectCells; % change here to do the same test for objects
+load('FaceData.mat');
+%load("ObjectData.mat")
+correlationData = combinedFaceCells; % change here to do the same test for objects
 
 
 %% Spearman Correlation Coefficient
@@ -56,4 +56,29 @@ upperLimit = MeanData + 2*stdData;
 lowerLimit = MeanData - 2*stdData;
 
 numExclude = sum(secondCol<lowerLimit);
+numPerfect = sum(secondCol>upperLimit);
+
+if numExclude > 0
+    ExcludeIndex = find(secondCol<lowerLimit);
+    ExcludeID = allCorrelations(ExcludeIndex);
+    fprintf('Participants you can exclude are:\n');
+    for i = 1:numel(ExcludeID)
+     fprintf('%s\n', ExcludeID{i});
+    end
+else
+    fprintf('All is fine no one to exclude\n')
+end
+
+% I also want to see whether we have perfectly consistent participants
+% (with our definition of perfect ) 
+if numPerfect > 0
+    PerfectIndex = find(secondCol>upperLimit);
+    PerfectID = allCorrelations(PerfectIndex);
+    fprintf('Perfect participants are:\n');
+    for i = 1:numel(PerfectID)
+     fprintf('%s\n', PerfectID{i});
+    end
+else
+    fprintf("Nobody is perfect")
+end
 
