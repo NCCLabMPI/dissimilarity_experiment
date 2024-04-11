@@ -17,6 +17,8 @@ trialDataObjects = {};%for objects
 cleanTrialDataFaces = {}; %put clean face trial data
 cleanTrialDataObject = {}; %put clean object trial data
 
+% this goes through all the subjectFolders and cleans the data based on its
+% subject group 
 
 for i = 1:numel(subjectFolders)
     % first I open the session file that contains the info I am looking for
@@ -73,9 +75,7 @@ for i = 1:numel(subjectFolders)
             matchingRatings = [block1Pairs,ratings1,ratings2(idx)];
             RatingTable = array2table(matchingRatings,'VariableNames',{'Stimulus1','Stimulus2','RatingBlock1','RatingBlock2'});
     
-            %here I also want to add subject ID. Since first subject does not have
-            %ID I'll give the name sub1 if empty
-            %ID's are in the session file. 
+            %here I also want to add subject ID. 
     
             sessionPath = fullfile(facePath,"sessions.csv");
             currentSession = readtable(sessionPath);
