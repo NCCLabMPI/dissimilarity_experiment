@@ -7,9 +7,9 @@ clc
 
 filePath = '/Users/ece.ziya/Desktop/Dissimilarity/Matlab/DataFiles';
 cd(filePath);
-load('FaceData.mat');
-%load("ObjectData.mat")
-correlationData = combinedFaceCells; % change here to do the same test for objects
+%load('FaceData.mat');
+load("ObjectData.mat")
+correlationData = combinedObjectCells; % change here to do the same test for objects
 
 
 %% Spearman Correlation Coefficient
@@ -36,7 +36,7 @@ for i = 1:numel(subjects) % for each subject there are 210 comparisons
     spearmanCorrelation{i} = {subjects{i}, correlationCoefficient};
 
 end
-
+   allCorrelations = vertcat(spearmanCorrelation{:});
 %% Fischer's Transformation 
 
 fishtrans = {};
@@ -45,17 +45,15 @@ for i = 1:numel(spearmanCorrelation)
     z = 0.5 * log((1 + coefficentValue) / (1 - coefficentValue));% fischer transform code
     fishtrans{i} = {spearmanCorrelation{i}{1}, z};
 end 
+%allFishCorrelations = vertcat(fishtrans{:});
+%% Normal Distributon of my sample
+secondCol = cell2mat(allCorrelations(:, 2));
 
-%% one sample t-test
+MeanData = mean(secondCol); %to see the distribution of my data
+stdData = std(secondCol);
 
-pValues = {}; % p< .05 will be excluded
+upperLimit = MeanData + 2*stdData;
+lowerLimit = MeanData - 2*stdData;
 
-for i = 1:numel(subjects)
-    
-   currentFish = fishtrans{i}{2};
-    
-  [h,p] = ttest(currentFish); %two-tailed one sample t-test against 0
+numExclude = sum(secondCol<lowerLimit);
 
-   pValues{i} = p;
-
-end
