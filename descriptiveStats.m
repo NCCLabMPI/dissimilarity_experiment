@@ -2,7 +2,7 @@
 clear
 clc
 folderPath = '/Volumes/Projects/2023-0383-PerceiveIrrelevance/03data/DissimilarityMatrices';
-cd(folderPath)
+cd(folderPath)% you should give the permission to matlab for shared folders
 addpath(genpath(folderPath)); %I open the path where my data is
 
 % Decide whether the file is object or face data
