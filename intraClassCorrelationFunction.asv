@@ -1,6 +1,5 @@
 function [] = intraClassCorrelationFunction(analysisData)
 
-
 % check whether the data is for objects or faces 
 
 meanRatings = array2table(mean([analysisData.RatingBlock1,analysisData.RatingBlock2],2),"VariableNames",{'meanRatings'});
@@ -36,11 +35,5 @@ end
 % create a table that has participant ID and mean ratings given per each. 
 
 ratingsMatrix = [uniquePairs, cell2mat(meanRatingsperPair')];
-meanRatingsTable = array2table(ratingsMatrix, 'VariableNames', [{'Stimulus1', 'Stimulus2'}, strcat('Participant_', string(uniqueParticipantID'))]);
+meanRatingsTable = array2table(ratingsMatrix, 'VariableNames', [{'Stimulus1', 'Stimulus2'}, strcat(dataType, '_', string(uniqueParticipantID'))]);
 
-end
-
- 
-
-  
-    

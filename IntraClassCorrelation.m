@@ -15,5 +15,6 @@ load('FaceData.mat');
 objectAnalysisData = combinedObjectCells;
 faceAnalysisData = combinedFaceCells;
 intraClassCorrelationFunction(faceAnalysisData);
-intraClassCorrelationFunction(objectAnalysisData)
+intraClassCorrelationFunction(objectAnalysisData);
 
+save('meanRatingsTable')
