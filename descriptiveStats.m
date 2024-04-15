@@ -1,6 +1,7 @@
 %% Clear and go to the folder for the data 
 clear
 clc
+addpath('./')
 config;
 cd(rawDataPath)% you should give the permission to matlab for shared folders
 addpath(genpath(rawDataPath)); %I open the path where my data is

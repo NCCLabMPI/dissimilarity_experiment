@@ -1,6 +1,8 @@
 function [] = intra_rater_reliability(correlationData)
 
-
+% this function gets the ratings given to each pair by every subject and
+% calcultes the intra-rater reliability. Then, It prints the subject IDs
+% that can be excluded due to low intra-rater reliability
 
 correlationData.subjectNumber = cellfun(@char, correlationData.subjectNumber, 'UniformOutput', false);
 subjects = unique(string(correlationData.subjectNumber)); % get unique subject numbers 
