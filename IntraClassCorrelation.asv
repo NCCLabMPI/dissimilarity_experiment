@@ -34,8 +34,16 @@ for i= 1: height(uniquePairs)
 end
 
 uniqueParticipantID =  unique(string(analysisData.subjectNumber)); 
+
 meanRatingsperPair ={};
-for i = 1:numel(uniqueParticipantID)
+
+for i = 1:height(uniquePairs)
+    
     currentRating = pairRatings{i};
     meanRatingsperPair{i}=currentRating;
 
+end
+    
+% create a table that has participant ID and mean ratings given per each. 
+for 
+rating1 = meanRatingsperPair{1}

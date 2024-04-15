@@ -34,10 +34,18 @@ for i= 1: height(uniquePairs)
 end
 
 uniqueParticipantID =  unique(string(analysisData.subjectNumber)); 
+
 meanRatingsperPair ={};
 
-for i = 1:numel(uniquePairs)
+for i = 1:height(uniquePairs)
+    
     currentRating = pairRatings{i};
     meanRatingsperPair{i}=currentRating;
 
 end
+    
+% create a table that has participant ID and mean ratings given per each. 
+
+ratingsMatrix = [uniquePairs, cell2mat(meanRatingsperPair')];
+meanRatingsTable = array2table(ratingsMatrix, 'VariableNames', [{'Stimulus1', 'Stimulus2'}, strcat('Participant_', string(uniqueParticipantID'))]);
+
