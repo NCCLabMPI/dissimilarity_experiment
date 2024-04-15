@@ -35,9 +35,7 @@ end
 
 uniqueParticipantID =  unique(string(analysisData.subjectNumber)); 
 meanRatingsperPair ={};
-
-for i = 1:numel(uniquePairs)
+for i = 1:numel(uniqueParticipantID)
     currentRating = pairRatings{i};
     meanRatingsperPair{i}=currentRating;
 
-end
