@@ -1,28 +1,7 @@
+function [] = intra_rater_reliability(correlationData)
 
-%% Check test-retest reliability within subjects
 
-% get the processed files 
-clear
-clc
-config
-addpath('./')
-cd(processed_data_path);
-load('FaceData.mat');
-disp('Face')
-face_correlationData = combinedFaceCells; % change here to do the same test for objects
-intra_rater_reliability(face_correlationData)
 
-load('ObjectData.mat');
-disp('')
-disp('Object')
-object_correlationData = combinedObjectCells; % change here to do the same test for objects
-intra_rater_reliability(object_correlationData)
-
-%% Spearman Correlation Coefficient
-
-% identify unique subject IDs for calculating test-retest reliability for
-% each
- 
 correlationData.subjectNumber = cellfun(@char, correlationData.subjectNumber, 'UniformOutput', false);
 subjects = unique(string(correlationData.subjectNumber)); % get unique subject numbers 
 
@@ -87,4 +66,5 @@ if numPerfect > 0
 else
     fprintf("Nobody is perfect")
 end
+
 

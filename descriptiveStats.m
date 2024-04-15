@@ -1,12 +1,12 @@
 %% Clear and go to the folder for the data 
 clear
 clc
-folderPath = '/Volumes/Projects/2023-0383-PerceiveIrrelevance/03data/DissimilarityMatrices';
-cd(folderPath)% you should give the permission to matlab for shared folders
-addpath(genpath(folderPath)); %I open the path where my data is
+config;
+cd(rawDataPath)% you should give the permission to matlab for shared folders
+addpath(genpath(rawDataPath)); %I open the path where my data is
 
 % Decide whether the file is object or face data
-subjectFolders = dir(folderPath);
+subjectFolders = dir(rawDataPath);
 subjectFolders = subjectFolders([subjectFolders.isdir] & ~startsWith({subjectFolders.name}, '.') ...
                                                         & ~strcmp({subjectFolders.name},'Age&Gender')); % remove both hidden and demographics file
 %sessionID = {}; % this one is for deciding which code I'll use - face or object
@@ -23,7 +23,7 @@ cleanTrialDataObject = {}; %put clean object trial data
 for i = 1:numel(subjectFolders)
     % first I open the session file that contains the info I am looking for
     
-    currentSubject = fullfile(folderPath,subjectFolders(i).name);
+    currentSubject = fullfile(rawDataPath,subjectFolders(i).name);
     subjectFileContent = dir(currentSubject);
     subjectSessionFile = fullfile(currentSubject,'sessions.csv');
     sessionData = readtable(subjectSessionFile);
@@ -170,17 +170,16 @@ end
 
     %save the file
     faceRatingFile = 'FaceData.mat';
-    dataFile = '/Users/ece.ziya/Desktop/Dissimilarity/Matlab/DataFiles';
-    save(fullfile(dataFile,faceRatingFile),'combinedFaceCells');
+    %dataFile = '/Users/ece.ziya/Desktop/Dissimilarity/Matlab/DataFiles';
+    save(fullfile(processedDataPath,faceRatingFile),'combinedFaceCells');
     objectRatingFile = 'ObjectData.mat';
-    dataFile = '/Users/ece.ziya/Desktop/Dissimilarity/Matlab/DataFiles';
-    save(fullfile(dataFile,objectRatingFile),'combinedObjectCells');
+    save(fullfile(processedDataPath,objectRatingFile),'combinedObjectCells');
     
 %% Descriptive for gender and age 
 clear
 clc
-folderPath = '/Users/ece.ziya/Desktop/Dissimilarity/Matlab';
-cd(folderPath)
+config
+cd(demographics)
 demographics = readtable("participantDemographics_DM.xlsx");
 
 meanAge = mean(demographics.Age);
