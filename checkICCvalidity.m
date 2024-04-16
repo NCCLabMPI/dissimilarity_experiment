@@ -26,10 +26,9 @@ for i = 1:1000
     randomIndices = randperm(length(ratings));
     randomizedColumn = ratings(randomIndices, j);
     randomRatings(:, j) = randomizedColumn;
+    end
 
     [r, LB, UB, F, df1, df2, p] = ICC(randomRatings, 'C-k', 0.05, 0);
-    end
-    
     rValues(i)= r;
 end
     
