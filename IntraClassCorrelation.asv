@@ -10,7 +10,11 @@ addpath(genpath(processedDataPath));
 
 % get the processed data
 load('ObjectData.mat');
-%load('FaceData.mat');
+load('FaceData.mat');
+
+%clean the excluded participant data 
+
+
 
 analysisData = combinedObjectCells;
 %faceAnalysisData = combinedFaceCells;
@@ -56,4 +60,4 @@ meanRatingsTable = array2table(ratingsMatrix, 'VariableNames', [{'Stimulus1', 'S
 
 ratingsData = table2array(meanRatingsTable(:, 3:end)); % I get the ratings
 
-[r, LB, UB, F, df1, df2, p] = ICC(M, type, alpha, r0)
+[r, LB, UB, F, df1, df2, p] = ICC(ratingsData, 'C-k', 0.05, 0);

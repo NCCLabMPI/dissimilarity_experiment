@@ -10,10 +10,15 @@ addpath(genpath(processedDataPath));
 
 % get the processed data
 load('ObjectData.mat');
-%load('FaceData.mat');
+load('FaceData.mat');
+
+%clean the excluded participant data 
+
+faceAnalysisData = dataExclude(combinedFaceCells,'Sub-119');
+
 
 analysisData = combinedObjectCells;
-%faceAnalysisData = combinedFaceCells;
+faceAnalysisData = combinedFaceCells;
 %intraClassCorrelationFunction(faceAnalysisData);
 %intraClassCorrelationFunction(objectAnalysisData);
 

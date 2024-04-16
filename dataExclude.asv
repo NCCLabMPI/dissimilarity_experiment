@@ -8,7 +8,7 @@ function [cleanData] = dataExclude(analysisData,subjectID)
 
 comparisonCol = string(analysisData.subjectNumber);
 
-excludeIndex = strcmp(comparisonCol, subjectID);
+excludeIndex = strcmp(comparsio, subjectID);
 
 %exclude the rows belongs to this participant
 
