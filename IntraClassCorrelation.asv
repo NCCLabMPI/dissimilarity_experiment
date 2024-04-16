@@ -9,10 +9,13 @@ cd(processedDataPath)
 addpath(genpath(processedDataPath));
 
 % get the processed data
-load("ObjectData.mat");
-%load(FaceData.mat);
+load('ObjectData.mat');
+%load('FaceData.mat');
 
 analysisData = combinedObjectCells;
+%faceAnalysisData = combinedFaceCells;
+%intraClassCorrelationFunction(faceAnalysisData);
+%intraClassCorrelationFunction(objectAnalysisData);
 
 meanRatings = array2table(mean([analysisData.RatingBlock1,analysisData.RatingBlock2],2),"VariableNames",{'meanRatings'});
 meanTable = [analysisData,meanRatings];
@@ -41,9 +44,16 @@ for i = 1:height(uniquePairs)
     
     currentRating = pairRatings{i};
     meanRatingsperPair{i}=currentRating;
-
 end
     
-% create a table that has participant ID and mean ratings given per each. 
-for 
-rating1 = meanRatingsperPair{1}
+% create a table that has participant ID and mean ratings given per each.
+% this table is for seeing mean of how each participant rated pairs 
+
+ratingsMatrix = [uniquePairs, cell2mat(meanRatingsperPair')];
+meanRatingsTable = array2table(ratingsMatrix, 'VariableNames', [{'Stimulus1', 'Stimulus2'}, strcat('Participant_', string(uniqueParticipantID'))]);
+
+% calculate ICC 
+
+ratingsData = table2array(meanRatingsTable(:, 3:end)); % I get the ratings
+
+[r, LB, UB, F, df1, df2, p] = ICC(M, type, alpha, r0)

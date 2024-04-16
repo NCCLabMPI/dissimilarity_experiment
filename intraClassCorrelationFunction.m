@@ -1,4 +1,5 @@
-function [] = intraClassCorrelationFunction(analysisData)
+
+function [meanRatingsTable] = intraClassCorrelationFunction(analysisData)
 
 
 % check whether the data is for objects or faces 
