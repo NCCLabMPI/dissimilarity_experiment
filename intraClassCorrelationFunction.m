@@ -39,7 +39,7 @@ ratingsMatrix = [uniquePairs, cell2mat(meanRatingsperPair')];
 meanRatingsTable = array2table(ratingsMatrix, 'VariableNames', ...
     [{'Stimulus1', 'Stimulus2'}, strcat(dataType,'Participant_', string(uniqueParticipantID'))]);
 
-%save meanRatingsTable for future checks 
+% save meanRatingsTable for future usage 
 
 if strcmp(dataType, 'Object')
     filename = 'ObjectMeanRatingsTable.mat';
@@ -53,7 +53,12 @@ save(fullPath,'meanRatingsTable')
 
 % calculate ICC 
 
-ratingsData = table2array(meanRatingsTable(:, 3:end)); % I get the ratings
+%before calculating ICC, remove the identical pairs 
+
+pairs = [meanRatingsTable{:, 1}, meanRatingsTable{:, 2}];
+uniqueIdx = ~all(pairs(:, 1) == pairs(:, 2), 2);
+
+ratingsData = table2array(meanRatingsTable(uniqueIdx, 3:end));
 
 
 [r, LB, UB, F, df1, df2, p] = ICC(ratingsData, 'C-k', 0.05, 0);

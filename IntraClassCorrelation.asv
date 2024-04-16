@@ -17,6 +17,14 @@ load('FaceData.mat');
 faceAnalysisData = dataExclude(combinedFaceCells,'Sub-119');
 objectAnalysisData = combinedObjectCells;
 
-%intraClassCorrelationFunction(faceAnalysisData);
-intraClassCorrelationFunction(combinedObjectCells);
+faceICCTable = intraClassCorrelationFunction(faceAnalysisData,"Face");
+objectICCTable =intraClassCorrelationFunction(combinedObjectCells,"Object");
+
+faceICCFile = 'FaceICC.mat';
+save(fullfile(processedDataPath,faceICCFile),'combinedFaceCells');
+    objectRatingFile = 'ObjectData.mat';
+    save(fullfile(processedDataPath,objectRatingFile),'combinedObjectCells');
+
+
+save
 
