@@ -1,6 +1,7 @@
 
 function [ICCTable] = intraClassCorrelationFunction(analysisData,dataType)
 
+config;
 
 meanRatings = array2table(mean([analysisData.RatingBlock1,analysisData.RatingBlock2],2),"VariableNames",{'meanRatings'});
 meanTable = [analysisData,meanRatings];
@@ -35,12 +36,24 @@ end
 % this table is for seeing mean of how each participant rated pairs 
 
 ratingsMatrix = [uniquePairs, cell2mat(meanRatingsperPair')];
-meanRatingsTable = array2table(ratingsMatrix, 'VariableNames', [{'Stimulus1', 'Stimulus2'}, strcat(dataType,'Participant_', string(uniqueParticipantID'))]);
+meanRatingsTable = array2table(ratingsMatrix, 'VariableNames', ...
+    [{'Stimulus1', 'Stimulus2'}, strcat(dataType,'Participant_', string(uniqueParticipantID'))]);
+
+%save meanRatingsTable for future checks 
+
+if strcmp(dataType, 'Object')
+    filename = 'ObjectMeanRatingsTable.mat';
+elseif strcmp(dataType, 'Face')
+    filename = 'FaceMeanRatingsTable.mat';
+end
+
+fullPath = fullfile(processedDataPath, filename);
+
+save(fullPath,'meanRatingsTable')
 
 % calculate ICC 
 
 ratingsData = table2array(meanRatingsTable(:, 3:end)); % I get the ratings
-
 
 
 [r, LB, UB, F, df1, df2, p] = ICC(ratingsData, 'C-k', 0.05, 0);

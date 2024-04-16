@@ -171,7 +171,6 @@ end
 
     %save the file
     faceRatingFile = 'FaceData.mat';
-    %dataFile = '/Users/ece.ziya/Desktop/Dissimilarity/Matlab/DataFiles';
     save(fullfile(processedDataPath,faceRatingFile),'combinedFaceCells');
     objectRatingFile = 'ObjectData.mat';
     save(fullfile(processedDataPath,objectRatingFile),'combinedObjectCells');
