@@ -90,9 +90,20 @@ end
         % Y contains the coordinates of the stimuli 
         % eigvals contains eigenvalues
 
+        % check whether data can be visualized 2D 
 
+        eigenCheck = [eigvals eigvals/max(abs(eigvals))];
+
+        % data can be plotted 2D because first 2 eigenvalues capture the most
+        % variance 
+
+        % check reliability of MDS with maximum relative error 
+        
+        maxrelerr = max(abs(distanceMatrix - squareform(pdist(Y(:,1:2))))) / max(distanceMatrix);
 
         
+        % plot the MDS 
 
+        
 
   

@@ -90,6 +90,12 @@ end
         % Y contains the coordinates of the stimuli 
         % eigvals contains eigenvalues
 
+        % check whether data can be visualized 2D 
+
+        eigenCheck = [eigvals eigvals/max(abs(eigvals))];
+
+        % data can be plotted because e
+
 
 
         
