@@ -34,7 +34,7 @@ end
 
     stimuliIDs = unique([meanRatingsTable.Stimulus1; meanRatingsTable.Stimulus2]); % this one looks unique stimulus IDs
     
-    dissimilarityMatrix = [];
+    dissimilarityMatrix = []; % it is gonna be 20X20 matrix
 
     for i= 1:height(meanRatingsTable)
 
@@ -54,5 +54,27 @@ end
         dissimilarityMatrix(stim2, stim1) = dissimilarityScore; % for the symetric matrix
 
     end
+       
+        % in the current dissimilarity Matrix, higher values mean higher
+        % similarity and lower values mean higher dissimilarity [distance]
+        % before MDS, we will convert similarity scores to distance scores 
+        
+        constant = max(dissimilarityMatrix(:)); % highest value 
+        distanceMatrix = constant - dissimilarityMatrix;
+
+        %for the MDS, same pairs' distance should be 0
+        %table will be altered to ensure this assumption 
+
+        %classic (metric) MDS 
+        
+        %[Y, eigvals] = cmdscale(dissimilarityMatrix);
+
+        % Y contains the coordinates of the stimuli 
+        % eigvals contains eigenvalues
+
+
+
+        
+
 
   
