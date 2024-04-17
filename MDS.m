@@ -62,12 +62,30 @@ end
         constant = max(dissimilarityMatrix(:)); % highest value 
         distanceMatrix = constant - dissimilarityMatrix;
 
-        %for the MDS, same pairs' distance should be 0
+        %original distance Matrix
+
+        coloumnNames = {};
+        rowNames = {};
+
+        for i = 1: height(distanceMatrix)
+            coloumnNames{i} = ['Stimulus',num2str(i)];
+            rowNames{i}=['Stimulus',num2str(i)];
+        end
+
+        distanceTable = array2table(distanceMatrix,'VariableNames',coloumnNames,'RowNames',rowNames);
+        save(fullfile(processedDataPath, 'distanceTable.mat'), 'distanceTable');
+
+        %for the MDS, same pairs' distance (diagonal elements) should be 0
         %table will be altered to ensure this assumption 
+
+    
+        for i = 1:height(distanceMatrix)
+            distanceMatrix(i, i) = 0;
+        end
 
         %classic (metric) MDS 
         
-        %[Y, eigvals] = cmdscale(dissimilarityMatrix);
+        [Y, eigvals] = cmdscale(distanceMatrix);
 
         % Y contains the coordinates of the stimuli 
         % eigvals contains eigenvalues
