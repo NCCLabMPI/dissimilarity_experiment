@@ -94,11 +94,18 @@ end
 
         eigenCheck = [eigvals eigvals/max(abs(eigvals))];
 
-        % data can be plotted because e
+        % data can be plotted 2D because first 2 eigenvalues capture the most
+        % variance 
 
-
+        % check reliability of MDS with maximum relative error 
+        
+        maxrelerr = max(abs(distanceMatrix - squareform(pdist(Y(:,1:2))))) / max(distanceMatrix);
 
         
-
-
+        % plot the MDS 
+        
+        plot(Y(:,1),Y(:,2),'.')
+        text(Y(:,1)+25,Y(:,2),)
+        xlabel('Miles')
+        ylabel('Miles')
   
