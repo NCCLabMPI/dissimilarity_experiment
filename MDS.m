@@ -113,8 +113,7 @@ end
         %xlabel('Distance')
         %ylabel('Distance')
 
-        %plot as images 
-        
+        %plot as images     
         cd(faceImagesPath);
         addpath(genpath(faceImagesPath));
 
@@ -122,18 +121,28 @@ end
             'Face7Center.png','Face8Center.png','Face9Center.png','Face10Center.png','Face11Center.png','Face12Center.png','Face13Center.png','Face14Center.png','Face15Center.png'...
             'Face16Center.png','Face17Center.png','Face18Center.png','Face19Center.png','Face20Center.png'};
 
-        %load the images 
+        %load the images
+        scaleFactor = 0.25; % Specify the scale factor for resizing (e.g., 0.5 for 50%)
         faceImagesCell = {};
         for i = 1:numel(faceImages)
-            faceImagesCell{i} = imread(faceImages{i});
+            img = imread(faceImages{i});
+            scaledImg = imresize(img, scaleFactor); % Rescale the image
+            faceImagesCell{i} = scaledImg;
         end
+       
         
-        %plot 
-
+        %plot
         
+        figure;
 
-        plot(Y(:,1), Y(:,2), '.')
+        plot(Y(:,1), Y(:,2), '.');
+
+        hold on;
+
         for i = 1:numel(faceImagesCell)
-        image(Y(i,1), Y(i,2), faceImagesCell{i})
+        scatterimage('XData', Y(i, 1), 'YData', Y(i, 2), 'CData', faceImagesCell{i});
         end
+        
+        hold off;
+       
   
