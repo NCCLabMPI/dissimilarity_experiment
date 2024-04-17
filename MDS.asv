@@ -103,9 +103,36 @@ end
 
         
         % plot the MDS 
+
+        %plot as stimulus numbers
+
+        %stimulusNames = {'1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20'};
+
+        %plot(Y(:,1),Y(:,2),'.')
+        %text(Y(:,1),Y(:,2),stimulusNames)
+        %xlabel('Distance')
+        %ylabel('Distance')
+
+        %plot as images 
         
-        plot(Y(:,1),Y(:,2),'.')
-        text(Y(:,1)+25,Y(:,2),)
-        xlabel('Miles')
-        ylabel('Miles')
+        cd(faceImagesPath);
+        addpath(genpath(faceImagesPath));
+
+        faceImages = {'Face1Center.png','Face2Center.png','Face3Center.png','Face4Center.png','Face5Center.png','Face6Center.png' ...
+            'Face7Center.png','Face8Center.png','Face9Center.png','Face10Center.png','Face11Center.png','Face12Center.png','Face13Center.png','Face14Center.png','Face15Center.png'...
+            'Face16Center.png','Face17Center.png','Face18Center.png','Face19Center.png','Face20Center.png'};
+
+        %load the images 
+        faceImagesCell = {};
+        for i = 1:numel(faceImages)
+            faceImagesCell{i} = imread(faceImages{i});
+        end
+        
+        %plot 
+
+        plot(Y(:,1), Y(:,2), '.')
+    for i = 1:numel(images)
+    image('XData', Y(i,1), 'YData', Y(i,2), 'CData', images{i})
+
+end
   
