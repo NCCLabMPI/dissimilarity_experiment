@@ -29,6 +29,30 @@ end
     
     stimulusTable = array2table([meanRatingsTable.Stimulus1,meanRatingsTable.Stimulus2],"VariableNames",{'Stimulus1','Stimulus2'});
     MDStable = [stimulusTable,rowMeans];
+
+% generate dissimilarity matrix
+
+    stimuliIDs = unique([meanRatingsTable.Stimulus1; meanRatingsTable.Stimulus2]); % this one looks unique stimulus IDs
     
-% compute dissimilarity matrix
+    dissimilarityMatrix = [];
+
+    for i= 1:height(meanRatingsTable)
+
+        % go through all the rows, get stimuli and their dissimilarity
+        % score
+
+        stimulus1 = MDStable.Stimulus1(i);
+        stimulus2 = MDStable.Stimulus2(i);
+        dissimilarityScore = MDStable.mean(i);
+
+        % find which unique stimuli ID 
+
+        stim1 = find(stimuliIDs == stimulus1);
+        stim2 = find(stimuliIDs == stimulus2);
+
+        dissimilarityMatrix(stim1, stim2) = dissimilarityScore;
+        dissimilarityMatrix(stim2, stim1) = dissimilarityScore; % for the symetric matrix
+
+    end
+
   
