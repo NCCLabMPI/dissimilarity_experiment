@@ -9,3 +9,6 @@ processedDataPath = '/Volumes/Projects/2023-0383-PerceiveIrrelevance/03data/Diss
 %Images pathway 
 faceImagesPath = '/Volumes/Projects/2023-0383-PerceiveIrrelevance/02experimentalSetup/DissimilarityAnalysis/Faces';
 objectImagesPath = '/Volumes/Projects/2023-0383-PerceiveIrrelevance/02experimentalSetup/DissimilarityAnalysis/Objects' ;
+
+%plots and graphs
+plotPath = '/Volumes/Projects/2023-0383-PerceiveIrrelevance/05figures/DissimilarityMatrices';
