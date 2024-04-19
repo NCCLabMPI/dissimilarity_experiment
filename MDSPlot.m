@@ -44,7 +44,7 @@ end
 for j = 1: numel(allImages) %plot the images on the MDS coordinates
 
 image('XData',[Y(j,1)-1 Y(j,1)+1],'YData',[Y(j,2)-1 Y(j,2)+1],'CData',flipud(cell2mat(allImages(j)))); %rescale and flip the images
-text(Y(j,1),Y(j,2),stimulusNames{j})
+text(Y(j,1),Y(j,2),stimulusNames{j},'EdgeColor','magenta','LineWidth',0.1)
 hold off
 end 
 colormap gray %grayscale the image
