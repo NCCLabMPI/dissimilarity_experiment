@@ -100,20 +100,16 @@ end
         % check reliability of MDS with maximum relative error 
         
         maxrelerr = max(abs(distanceMatrix - squareform(pdist(Y(:,1:2))))) / max(distanceMatrix);
-
         
         % plot the MDS 
 
-        %plot as stimulus numbers
+        
 figure;
         stimulusNames = {'1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20'};
-
-        plot(Y(:,1),Y(:,2),'.')
-        text(Y(:,1),Y(:,2),stimulusNames)
         xlabel('Distance')
         ylabel('Distance')
+        %plot(Y(:,1),Y(:,2),'.')       
  hold on
-
         %plot as images 
 
         cd(faceImagesPath);
@@ -122,34 +118,25 @@ figure;
         faceImages = {'Face1Center.png','Face2Center.png','Face3Center.png','Face4Center.png','Face5Center.png','Face6Center.png' ...
             'Face7Center.png','Face8Center.png','Face9Center.png','Face10Center.png','Face11Center.png','Face12Center.png','Face13Center.png','Face14Center.png','Face15Center.png'...
             'Face16Center.png','Face17Center.png','Face18Center.png','Face19Center.png','Face20Center.png'};
-
+allImages = {};
 for i = 1:numel(faceImages)
-
 currentImage = imread(faceImages{i});
-xlim([min(Y(:,1)) max(Y(:,1))]);
-ylim([min(Y(:,2)) max(Y(:,2))]);
+allImages{i} = currentImage;
+end
 
-image(Y(:,1),Y(:,2),flipud(currentImage));
+stimulusNames = {'1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20'};
 
-hold on
+for j = 1: numel(allImages)
+
+image('XData',[Y(j,1)-1 Y(j,1)+1],'YData',[Y(j,2)-1 Y(j,2)+1],'CData',flipud(cell2mat(allImages(j)))); %rescale the images
+text(Y(j,1),Y(j,2),stimulusNames{j})
+
+ hold on
 
 end
+
 hold off
-  %%   
-        %plot
-     
-        figure;
 
-        plot(Y(:,1), Y(:,2), '.'); % plot the coordinates
 
-        hold on; % keep the coordinates on the plot
 
-        for i = 1:numel(faceImages)
-           %img = imread(faceImages{i}); % read the current image
-           %faceImagesCell{i} = img; % save the i
-           image('XData', Y(i, 1), 'YData', Y(i, 2), 'CData', imread(faceImages{i})); %give the coordinates and the image
-        end
-        
-        hold off;
-       
-  
+ 
