@@ -1,5 +1,5 @@
 
-function [MDScell] = MDSFunction(MeanData,Datatype)
+function [MDS] = MDSFunction(MeanData,Datatype)
 
 config;
 meanRatingsTable = MeanData;
@@ -80,15 +80,14 @@ end
 
 %compute classic metric MDS 
 
-MDScell = {};
+MDS =
 
 if strcmp(Datatype,'Object')
     [Y, eigvals] = cmdscale(distanceMatrix);
-    MDScell = {Y,eigvals,Datatype};
-    
+    objectMDS = {Y,eigvals};
 elseif strcmp(Datatype,'Face')
     [Y, eigvals] = cmdscale(distanceMatrix);
-    MDScell = {Y,eigvals,Datatype};
+    faceMDS = {Y,eigvals};
 end
     
 end

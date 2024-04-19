@@ -1,6 +1,6 @@
 
-% This script is for multidimensional scaling (MDS)
-%classic MDS applied on non-spatial distances
+% This script computes multidimensional scaling (MDS)
+% classic MDS applied on non-spatial distances
 
 clear
 clc
@@ -10,11 +10,18 @@ config;
 cd(processedDataPath)
 addpath(genpath(processedDataPath));
 
+%load data and compute MDS
+
 load("FaceMeanRatingsTable.mat");
+faceMeanRatingData = meanRatingsTable;
+MDSface = MDSFunction(faceMeanRatingData,'Face');
+
 load("ObjectMeanRatingsTable.mat");
+objectMeanRatingData = meanRatingsTable;
+MDSobject = MDSFunction(objectMeanRatingData,'Object');
 
 
-
+%%
 % aggregate ratings into one rating
 
 % mean score per row
@@ -22,7 +29,7 @@ load("ObjectMeanRatingsTable.mat");
     rowMeans = {}; 
 
 for i = 1:height(meanRatingsTable)
-    rowMean = mean(meanRatingsTable(i,3:end),"all");
+    rowMean = mean(meanRatingsTable(i,3:17),"all");
     rowMeans{i} = rowMean;
 end
 
@@ -94,7 +101,7 @@ end
         % eigvals contains eigenvalues
 
         % check whether data can be visualized 2D 
-
+%%
         eigenCheck = [eigvals eigvals/max(abs(eigvals))];
 
         % data can be plotted 2D because first 2 eigenvalues capture the most
@@ -136,7 +143,7 @@ text(Y(j,1),Y(j,2),stimulusNames{j})
  hold on
 
 end
-
+colormap gray
 hold off
 
 
