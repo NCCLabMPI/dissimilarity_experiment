@@ -83,7 +83,7 @@ end
 MDScell = {};
 
 if strcmp(Datatype,'Object')
-    [Y, eigvals] = cmdscale(distanceMatrix);
+    [Y, eigvals] = cmdscale(distanceMatrix); %Y = coordinates
     MDScell = {Y,eigvals,Datatype};
     
 elseif strcmp(Datatype,'Face')
