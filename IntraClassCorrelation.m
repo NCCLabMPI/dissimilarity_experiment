@@ -18,17 +18,21 @@ faceAnalysisData = dataExclude(combinedFaceCells,'Sub-119');
 objectAnalysisData = combinedObjectCells;
 
 %call the intra-class correlation function
+% Face:
+[meanRatingsTable, faceICCTable] = intraClassCorrelationFunction(faceAnalysisData,"Face");
+% Save the results:
+faceICCFile = 'FaceICC.mat';
+save(fullfile(processedDataPath, faceICCFile), 'faceICCTable');
+faceMeanRatingFile = 'FaceMeanRatingsTable.mat';
+save(fullfile(processedDataPath, faceMeanRatingFile), 'meanRatingsTable');
 
-faceICCTable = intraClassCorrelationFunction(faceAnalysisData,"Face");
-objectICCTable =intraClassCorrelationFunction(combinedObjectCells,"Object");
+% Object:
+[meanRatingsTable, objectICCTable] =intraClassCorrelationFunction(combinedObjectCells,"Object");
 
 % save the files
-faceICCFile = 'FaceICC.mat';
 objectICCFile = 'ObjectICC.mat';
-
-save(fullfile(processedDataPath, faceICCFile), 'faceICCTable');
 save(fullfile(processedDataPath, objectICCFile), 'objectICCTable');
-
-
+objectMeanRatingFile = 'ObjectMeanRatingsTable.mat';
+save(fullfile(processedDataPath, objectMeanRatingFile), 'meanRatingsTable');
 
 

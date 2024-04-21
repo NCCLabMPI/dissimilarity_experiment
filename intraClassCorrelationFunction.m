@@ -1,7 +1,5 @@
 
-function [ICCTable] = intraClassCorrelationFunction(analysisData,dataType)
-
-config;
+function [meanRatingsTable, ICCTable] = intraClassCorrelationFunction(analysisData,dataType)
 
 meanRatings = array2table(mean([analysisData.RatingBlock1,analysisData.RatingBlock2],2),"VariableNames",{'meanRatings'});
 meanTable = [analysisData,meanRatings];
@@ -29,7 +27,7 @@ meanRatingsperPair ={};
 for i = 1:height(uniquePairs)
     
     currentRating = pairRatings{i};
-    meanRatingsperPair{i}=currentRating;
+    meanRatingsperPair{i}=currentRating;  % @Ece, is that statement necessary? It seems like it is simply recreating pairRatings all over again. Maybe we can remove it?
 end
     
 % create a table that has participant ID and mean ratings given per each.
@@ -39,22 +37,8 @@ ratingsMatrix = [uniquePairs, cell2mat(meanRatingsperPair')];
 meanRatingsTable = array2table(ratingsMatrix, 'VariableNames', ...
     [{'Stimulus1', 'Stimulus2'}, strcat(dataType,'Participant_', string(uniqueParticipantID'))]);
 
-% save meanRatingsTable for future usage 
-
-if strcmp(dataType, 'Object')
-    filename = 'ObjectMeanRatingsTable.mat';
-elseif strcmp(dataType, 'Face')
-    filename = 'FaceMeanRatingsTable.mat';
-end
-
-fullPath = fullfile(processedDataPath, filename);
-
-save(fullPath,'meanRatingsTable')
-
 % calculate ICC 
-
 %before calculating ICC, remove the identical pairs 
-
 pairs = [meanRatingsTable{:, 1}, meanRatingsTable{:, 2}];
 uniqueIdx = ~all(pairs(:, 1) == pairs(:, 2), 2);
 
