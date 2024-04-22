@@ -213,12 +213,9 @@ xticklabels({'Female','Male'});
 title('Sex Distribution');
 
 %plot age
-figure;
-[f,xi] = ksdensity(demographics.Age);
-plot(xi,f,'LineWidth', 2, 'Color', 'magenta');
-xlabel('Age');
-ylabel('Cumulative Probability');
-title('Cumulative Distribution Function (CDF) of Age');
 
+[f,xi] = ksdensity(demographics.Age); 
+figure
+plot(xi,f);
 
 
