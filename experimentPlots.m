@@ -19,3 +19,9 @@ ylabel('Density')
 title('Face Group Intra-Subject Correlation Kernel Density Estimate');
 
 mean(faceIntraRater);
+
+%% ICC tables 
+
+load("FaceICC.mat")
+load("ObjectICC.mat")
+ICCcombinedTable = [faceICCTable;objectICCTable];
