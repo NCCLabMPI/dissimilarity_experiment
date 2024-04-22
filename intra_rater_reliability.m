@@ -1,4 +1,4 @@
-function [allCorrelations] = intra_rater_reliability(correlationData)
+function [allFishCorrelations] = intra_rater_reliability(correlationData)
 
 % this function gets the ratings given to each pair by every subject and
 % calcultes the intra-rater reliability. Then, It prints the subject IDs
