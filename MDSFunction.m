@@ -1,5 +1,5 @@
 
-function [MDScell] = MDSFunction(MeanData,Datatype)
+function [distanceMatrix, MDScell] = MDSFunction(MeanData,Datatype)
 
 config;
 meanRatingsTable = MeanData;
