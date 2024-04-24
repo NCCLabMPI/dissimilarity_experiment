@@ -14,11 +14,11 @@ addpath(genpath(processedDataPath));
 
 load("FaceMeanRatingsTable.mat");
 faceMeanRatingData = meanRatingsTable;
-MDSface = MDSFunction(faceMeanRatingData,'Face');
+[faceDM, MDSface] = MDSFunction(faceMeanRatingData,'Face');
 
 load("ObjectMeanRatingsTable.mat");
 objectMeanRatingData = meanRatingsTable;
-MDSobject = MDSFunction(objectMeanRatingData,'Object');
+[objectDM, MDSobject] = MDSFunction(objectMeanRatingData,'Object');
 
 
 %% MDS check for number of eigenvalues and error rate before plotting the graphs
@@ -47,8 +47,30 @@ objectMDSFigure = gcf;
 filename = fullfile(plotPath, 'objectMDSFigure.png');
 saveas(objectMDSFigure, filename);
 
+%% Select the 2 faces and objects that have the largest distance to all other stimuli:
 
+% Set the diagonal to Nan:
+faceDM(eye(length(faceDM))==1) = nan;
+objectDM(eye(length(objectDM))==1) = nan;
 
+% Compute the mean distance from each stimulus to all other:
+meanFaceDist = mean(faceDM, 1, "omitnan");
+meanObjectDist = mean(objectDM, 1, "omitnan");
 
+% Find the two faces which are the furthest from the rest:
+% Faces:
+[~, sortedIndices] = sort(meanFaceDist, 'descend');
+highestIndices = sortedIndices(1:2);
+target_01 = sprintf('face_%d\n',  highestIndices(1));
+target_02 = sprintf('face_%d\n',  highestIndices(2));
+fprintf(target_01)
+fprintf(target_02)
+% Objects:
+[~, sortedIndices] = sort(meanObjectDist, 'descend');
+highestIndices = sortedIndices(1:2);
+target_01 = sprintf('object_%d\n',  highestIndices(1));
+target_02 = sprintf('object_%d\n',  highestIndices(2));
+fprintf(target_01)
+fprintf(target_02)
 
  
