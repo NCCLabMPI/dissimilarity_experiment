@@ -12,23 +12,15 @@ stimulusPairs = [analysisData.Stimulus1,analysisData.Stimulus2];
 uniquePairs = unique(stimulusPairs, 'rows');
 
 
-pairRatings = [];
+meanRatingsperPair = [];
 
 for i= 1: height(uniquePairs)
     pairIndices = all((meanTable.Stimulus1 == uniquePairs(i, 1)) & (meanTable.Stimulus2 == uniquePairs(i, 2)),2);%find the unique pairs
     pairMeanRatings = meanTable.meanRatings(pairIndices); % get the ratings for unique pairs
-    pairRatings{i} = (pairMeanRatings)';
+    meanRatingsperPair{i} = (pairMeanRatings)';
 end
 
 uniqueParticipantID =  unique(string(analysisData.subjectNumber)); 
-
-meanRatingsperPair ={};
-
-for i = 1:height(uniquePairs)
-    
-    currentRating = pairRatings{i};
-    meanRatingsperPair{i}=currentRating;  % @Ece, is that statement necessary? It seems like it is simply recreating pairRatings all over again. Maybe we can remove it?
-end
     
 % create a table that has participant ID and mean ratings given per each.
 % this table is for seeing mean of how each participant rated pairs 

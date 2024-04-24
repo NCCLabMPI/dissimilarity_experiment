@@ -11,12 +11,12 @@ load("objectIntraRaterReliability.mat")
 faceIntraRater = cell2mat(faceIntraReliability(:,2));
 objectIntraRater = cell2mat(objectIntraReliability (:,2));
 
-[f,xi]= ksdensity(faceIntraRater);
 figure;
-plot(xi,f,'LineWidth',1.5,'Color','green');
-xlabel('Intra-subject correlation')
-ylabel('Density')
-title('Face Group Intra-Subject Correlation Kernel Density Estimate');
+
+histogram(objectIntraRater,'FaceColor',objectColor);
+xlabel('Intra-subject correlation (fisher transformed')
+ylabel('Number of subjects')
+title('Object Group Intra-Subject Correlation');
 
 mean(faceIntraRater);
 
