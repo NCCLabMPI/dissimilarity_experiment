@@ -206,7 +206,7 @@ ageTable = table({femaleAge},{maleAge},'VariableNames',{'Female Age','Male Age'}
 
 figure;
 
-bar([countFemale,countMale],'FaceColor','');
+bar([countFemale,countMale],'FaceColor',descriptiveColor);
 xlabel('Sex');
 ylabel('Count');
 xticklabels({'Female','Male'});
@@ -214,11 +214,10 @@ title('Sex Distribution');
 
 %plot age
 figure;
-[f,xi] = ksdensity(demographics.Age);
-plot(xi,f,'LineWidth', 2, 'Color', 'magenta');
+histogram([demographics.Age],'FaceColor',descriptiveColor);
 xlabel('Age');
-ylabel('Cumulative Probability');
-title('Cumulative Distribution Function (CDF) of Age');
+ylabel('Count');
+title('Age distribution');
 
 
 
