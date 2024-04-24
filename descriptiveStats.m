@@ -206,7 +206,7 @@ ageTable = table({femaleAge},{maleAge},'VariableNames',{'Female Age','Male Age'}
 
 figure;
 
-bar([countFemale,countMale],'FaceColor','magenta');
+bar([countFemale,countMale],'FaceColor','');
 xlabel('Sex');
 ylabel('Count');
 xticklabels({'Female','Male'});
