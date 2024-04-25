@@ -44,7 +44,7 @@ end
 for j = 1: numel(allImages) %plot the images on the MDS coordinates
 
     imgData = flipud(cell2mat(allImages(j))); % Get image data
-    alphaData = ~all(imgData == 0, 3);
+    alphaData = ones(size(imgData, 1), size(imgData, 2)) * 0.5;
 
 image('XData',[Y(j,1)-1 Y(j,1)+1],'YData',[Y(j,2)-1 Y(j,2)+1],'CData',imgData,'AlphaData', alphaData); %rescale and flip the images
 %text(Y(j,1),Y(j,2),stimulusNames{j})
