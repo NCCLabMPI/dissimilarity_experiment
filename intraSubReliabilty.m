@@ -9,13 +9,13 @@ addpath('./')
 cd(processedDataPath);
 load('FaceData.mat');
 disp('Face')
-face_correlationData = combinedFaceCells; % change here to do the same test for objects
+face_correlationData = combinedFaceCells; 
 faceIntraReliability = intra_rater_reliability(face_correlationData);
 
 load('ObjectData.mat');
 disp(' ')
 disp('Object')
-object_correlationData = combinedObjectCells; % change here to do the same test for objects
+object_correlationData = combinedObjectCells; 
 objectIntraReliability = intra_rater_reliability(object_correlationData);
 
 % Save the tables:

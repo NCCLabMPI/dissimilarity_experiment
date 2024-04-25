@@ -53,7 +53,7 @@ end
 colormap gray %grayscale the image
 
 
-
+end
 
 
 
